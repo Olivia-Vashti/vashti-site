@@ -195,7 +195,19 @@
     margin-top: 2px;
   }
 
-  .cp-tag.food { background: #FDEEE0; color: #C97040; }
+  .cp-tag.gym { background: #FFE8F0; color: #C0407A; }
+  .workout-card { background: white; border: 1px solid rgba(232,160,160,0.15); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .workout-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .workout-day { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-soft); font-weight: 500; }
+  .workout-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+  .workout-badge.glute { background: #FFE8F0; color: #C0407A; }
+  .workout-badge.upper { background: var(--lavender-light); color: #7A6898; }
+  .workout-badge.fullbody { background: var(--sage-light); color: #5A8A54; }
+  .workout-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--text-dark); margin-bottom: 6px; }
+  .workout-exercises { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .workout-exercise { font-size: 12px; color: var(--text-soft); display: flex; align-items: center; gap: 6px; line-height: 1.5; }
+  .workout-exercise::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--rose); flex-shrink: 0; }
+  .workout-tip { font-size: 11px; color: var(--rose-deep); margin-top: 8px; font-style: italic; }
   .cp-tag.move { background: var(--sage-light); color: #5A8A54; }
   .cp-tag.mind { background: var(--lavender-light); color: #7A6898; }
   .cp-tag.money { background: var(--gold-light); color: #9A7830; }
@@ -264,6 +276,28 @@
 
   .section-divider { text-align: center; font-size: 10px; letter-spacing: 4px; color: var(--rose); opacity: 0.5; margin: 1rem 0; }
 
+  .mood-btn { padding: 7px 14px; border-radius: 20px; border: 1px solid rgba(232,160,160,0.3); background: white; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text-mid); cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+  .mood-btn.selected { background: #FAE8E8; border-color: var(--rose-deep); color: var(--rose-deep); font-weight: 500; }
+  .ritual-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: white; border: 1px solid rgba(232,160,160,0.15); border-radius: 12px; cursor: pointer; transition: all 0.2s; user-select: none; -webkit-tap-highlight-color: transparent; }
+  .ritual-item.checked { background: var(--blush-light); border-color: rgba(201,112,112,0.3); }
+  .ritual-item.checked .ritual-text { text-decoration: line-through; color: var(--text-soft); }
+  .ritual-box { width: 20px; height: 20px; flex-shrink: 0; border: 1.5px solid rgba(201,112,112,0.4); border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .ritual-item.checked .ritual-box { background: var(--rose-deep); border-color: var(--rose-deep); }
+  .ritual-check { display: none; color: white; font-size: 12px; font-weight: 700; }
+  .ritual-item.checked .ritual-check { display: block; }
+  .ritual-content { flex: 1; }
+  .ritual-text { font-size: 13px; color: var(--text-dark); font-weight: 400; }
+  .ritual-note { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
+  .reflect-card { background: white; border: 1px solid rgba(232,160,160,0.15); border-radius: 12px; padding: 12px 14px; }
+  .reflect-q { font-size: 12px; font-weight: 500; color: var(--text-mid); margin-bottom: 6px; }
+  .reflect-input { width: 100%; border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text-dark); resize: none; background: transparent; min-height: 60px; line-height: 1.6; }
+  .reflect-input::placeholder { color: #D4ADAD; }
+  .crisis-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; border: 1px solid transparent; }
+  .crisis-step { width: 24px; height: 24px; border-radius: 50%; background: rgba(201,112,112,0.15); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--rose-deep); flex-shrink: 0; margin-top: 1px; }
+  .crisis-body { flex: 1; }
+  .crisis-title { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--text-dark); margin-bottom: 3px; }
+  .crisis-text { font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+
   .reset-btn {
     display: block; width: 100%; padding: 10px;
     background: none; border: 1px solid rgba(232,160,160,0.3); border-radius: 12px;
@@ -290,6 +324,7 @@
 <div class="tabs">
   <button class="tab active" onclick="showTab('daily', this)">✦ Daily</button>
   <button class="tab" onclick="showTab('meals', this)">Meals</button>
+  <button class="tab" onclick="showTab('exercise', this)">Exercise</button>
   <button class="tab" onclick="showTab('wellness', this)">Wellness</button>
   <button class="tab" onclick="showTab('budget', this)">Budget</button>
 </div>
@@ -430,25 +465,179 @@
 <!-- WELLNESS TAB -->
 <div id="tab-wellness" class="panel">
   <div class="affirmation">
-    <div class="affirmation-text">"A DPhil is a marathon. Your wellbeing is not a luxury — it is your most important research tool."</div>
+    <div class="affirmation-text">"You are not just surviving this DPhil. You are allowed to flourish in it."</div>
   </div>
 
-  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Mind</div>
-  <div class="tip-card lavender"><div class="tip-icon">🧠</div><div class="tip-title">University Counselling Service</div><div class="tip-body">Free and genuinely good. Register early — there's always a wait. Don't wait until you're struggling; go when things feel manageable too.</div></div>
-  <div class="tip-card rose"><div class="tip-icon">🌿</div><div class="tip-title">Green space daily</div><div class="tip-body">Christ Church Meadow, Port Meadow, University Parks. 30 minutes of natural light and walking does more than most paid wellness things. Free forever.</div></div>
-  <div class="tip-card lavender"><div class="tip-icon">✨</div><div class="tip-title">Protect your mornings</div><div class="tip-body">20 minutes before opening your laptop — tea, a slow breakfast, no scrolling. This one habit anchors the whole day.</div></div>
+  <!-- MOOD CHECK-IN -->
+  <div style="background:white;border:1px solid rgba(232,160,160,0.2);border-radius:16px;padding:14px 16px;margin-bottom:12px;">
+    <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--text-dark);margin-bottom:4px;">How are you feeling today?</div>
+    <div style="font-size:12px;color:var(--text-soft);margin-bottom:12px;">Tap one. No judgment.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="mood-btns">
+      <button onclick="selectMood(this,'🌸','Flourishing')" class="mood-btn">🌸 Flourishing</button>
+      <button onclick="selectMood(this,'☀️','Good')" class="mood-btn">☀️ Good</button>
+      <button onclick="selectMood(this,'🌤','Okay')" class="mood-btn">🌤 Okay</button>
+      <button onclick="selectMood(this,'🌧','Struggling')" class="mood-btn">🌧 Struggling</button>
+      <button onclick="selectMood(this,'⛈','Really hard')" class="mood-btn">⛈ Really hard</button>
+    </div>
+    <div id="mood-response" style="margin-top:12px;display:none;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.7;"></div>
+    <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:11px;color:var(--text-soft);" id="mood-streak"></span>
+      <button onclick="saveMoodLog()" id="save-mood-btn" style="display:none;padding:6px 14px;background:var(--rose-deep);color:white;border:none;border-radius:10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">Log mood ✦</button>
+    </div>
+  </div>
+
+  <!-- MOOD HISTORY -->
+  <div style="background:white;border:1px solid rgba(232,160,160,0.15);border-radius:14px;padding:12px 16px;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--text-dark);">Mood history</div>
+      <button onclick="clearMoodLog()" style="font-size:10px;color:var(--text-soft);background:none;border:none;cursor:pointer;letter-spacing:0.5px;">clear</button>
+    </div>
+    <div id="mood-history" style="display:flex;flex-wrap:wrap;gap:6px;min-height:24px;">
+      <span style="font-size:12px;color:var(--text-soft);font-style:italic;">No moods logged yet.</span>
+    </div>
+  </div>
 
   <div class="section-divider">✦ ✦ ✦</div>
-  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Body</div>
-  <div class="tip-card sage"><div class="tip-icon">🚲</div><div class="tip-title">Cycle everywhere</div><div class="tip-body">Secondhand bike from Facebook Marketplace (£50–80). Pays for itself in one month vs buses. Daily movement and mental health boost built in for free.</div></div>
-  <div class="tip-card sage"><div class="tip-icon">🏃‍♀️</div><div class="tip-title">Running routes</div><div class="tip-body">Port Meadow and the Thames Path are stunning. Even 20–30 minutes twice a week transforms mood and sleep. Free, beautiful, yours.</div></div>
-  <div class="tip-card sage"><div class="tip-icon">💪</div><div class="tip-title">University gym (~£10–15/month)</div><div class="tip-body">Heavily subsidised for students. Worth it if structure motivates you. Otherwise, Hybrid Calisthenics on YouTube requires zero equipment and is excellent.</div></div>
+
+  <!-- MORNING RITUAL TRACKER -->
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:0.75rem;">Morning ritual</div>
+  <div style="font-size:12px;color:var(--text-soft);margin-bottom:1rem;">Your mornings set the tone. Tick what you did today.</div>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem;">
+    <div class="ritual-item" onclick="toggleRitual(this)">
+      <div class="ritual-box"><span class="ritual-check">✓</span></div>
+      <div class="ritual-content">
+        <div class="ritual-text">🙏 Prayer or quiet time</div>
+        <div class="ritual-note">Even 5 minutes. Ground yourself before the day begins.</div>
+      </div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(this)">
+      <div class="ritual-box"><span class="ritual-check">✓</span></div>
+      <div class="ritual-content">
+        <div class="ritual-text">📖 Read something not research</div>
+        <div class="ritual-note">A chapter, an article, anything that feeds your mind differently.</div>
+      </div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(this)">
+      <div class="ritual-box"><span class="ritual-check">✓</span></div>
+      <div class="ritual-content">
+        <div class="ritual-text">✍️ Journal — one page, free writing</div>
+        <div class="ritual-note">No rules. Brain dump, gratitude, dreams, frustrations. Just write.</div>
+      </div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(this)">
+      <div class="ritual-box"><span class="ritual-check">✓</span></div>
+      <div class="ritual-content">
+        <div class="ritual-text">🌿 Step outside before 10am</div>
+        <div class="ritual-note">Light before screens. Even five minutes changes your cortisol.</div>
+      </div>
+    </div>
+    <div class="ritual-item" onclick="toggleRitual(this)">
+      <div class="ritual-box"><span class="ritual-check">✓</span></div>
+      <div class="ritual-content">
+        <div class="ritual-text">📵 No phone for first 20 minutes</div>
+        <div class="ritual-note">The hardest one. The most important one.</div>
+      </div>
+    </div>
+  </div>
 
   <div class="section-divider">✦ ✦ ✦</div>
-  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Social & joy</div>
-  <div class="tip-card gold"><div class="tip-icon">🌸</div><div class="tip-title">One conscious treat per week</div><div class="tip-body">A nice coffee, something from Blackwell's bargain shelf, a long bath with candles. Budget for it so it feels like a reward, not guilt.</div></div>
-  <div class="tip-card rose"><div class="tip-icon">👯‍♀️</div><div class="tip-title">College & SU events</div><div class="tip-body">Many are free or subsidised — film screenings, talks, socials, comedy nights. Social connection is not optional during a DPhil. It is essential.</div></div>
+
+  <!-- WEEKLY REFLECTION -->
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:0.5rem;">Weekly reflection</div>
+  <div style="font-size:12px;color:var(--text-soft);margin-bottom:1rem;">Sunday evenings. Five minutes. Be honest with yourself.</div>
+
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1rem;" id="reflection-prompts">
+    <div class="reflect-card">
+      <div class="reflect-q">What was one thing that went well this week?</div>
+      <textarea class="reflect-input" placeholder="Write here..." id="ref-1"></textarea>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q">What was hard, and how did you handle it?</div>
+      <textarea class="reflect-input" placeholder="Write here..." id="ref-2"></textarea>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q">Did you feel connected to people this week?</div>
+      <textarea class="reflect-input" placeholder="Write here..." id="ref-3"></textarea>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q">One thing I'm grateful for from Ghana or home this week:</div>
+      <textarea class="reflect-input" placeholder="Write here..." id="ref-4"></textarea>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q">What do I need more of next week?</div>
+      <textarea class="reflect-input" placeholder="Write here..." id="ref-5"></textarea>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:1.5rem;">
+    <button onclick="saveReflection()" style="flex:1;padding:10px;background:var(--rose-deep);color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;letter-spacing:0.5px;">Save this week's reflection ✦</button>
+    <button onclick="clearReflection()" style="padding:10px 14px;background:none;border:1px solid rgba(232,160,160,0.3);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-soft);cursor:pointer;">Clear</button>
+  </div>
+  <div id="reflection-saved" style="display:none;font-size:12px;color:#5A8A54;text-align:center;margin-bottom:1rem;font-style:italic;">Reflection saved 🌸</div>
+
+  <div class="section-divider">✦ ✦ ✦</div>
+
+  <!-- CRISIS TOOLKIT -->
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:0.5rem;">On a hard day</div>
+  <div style="font-size:12px;color:var(--text-soft);margin-bottom:1rem;">When everything feels too much. Come here first.</div>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1rem;">
+    <div class="crisis-card" style="background:var(--lavender-light);border-color:rgba(196,181,217,0.4);">
+      <div class="crisis-step">1</div>
+      <div class="crisis-body">
+        <div class="crisis-title">Stop and breathe</div>
+        <div class="crisis-text">4 counts in, hold 4, out 6. Do it three times right now. Your nervous system will shift.</div>
+      </div>
+    </div>
+    <div class="crisis-card" style="background:var(--blush-light);border-color:rgba(232,160,160,0.3);">
+      <div class="crisis-step">2</div>
+      <div class="crisis-body">
+        <div class="crisis-title">Name what you're feeling</div>
+        <div class="crisis-text">Is it research stress? Loneliness? Homesickness? Fatigue? Name it. It's easier to face something you can name.</div>
+      </div>
+    </div>
+    <div class="crisis-card" style="background:var(--sage-light);border-color:rgba(168,196,162,0.3);">
+      <div class="crisis-step">3</div>
+      <div class="crisis-body">
+        <div class="crisis-title">Do the smallest possible thing</div>
+        <div class="crisis-text">Not the whole thesis. Not the whole to-do list. One email. One paragraph. One walk around the block.</div>
+      </div>
+    </div>
+    <div class="crisis-card" style="background:var(--gold-light);border-color:rgba(212,168,83,0.25);">
+      <div class="crisis-step">4</div>
+      <div class="crisis-body">
+        <div class="crisis-title">Call or text someone from home</div>
+        <div class="crisis-text">Homesickness + isolation is real and it compounds. You don't have to explain everything. Just hearing a familiar voice helps.</div>
+      </div>
+    </div>
+    <div class="crisis-card" style="background:var(--lavender-light);border-color:rgba(196,181,217,0.4);">
+      <div class="crisis-step">5</div>
+      <div class="crisis-body">
+        <div class="crisis-title">Pray or journal it out</div>
+        <div class="crisis-text">Whatever you're carrying — write it down or bring it to God. You don't have to hold it alone.</div>
+      </div>
+    </div>
+    <div class="crisis-card" style="background:var(--blush-light);border-color:rgba(232,160,160,0.3);">
+      <div class="crisis-step">6</div>
+      <div class="crisis-body">
+        <div class="crisis-title">If it persists — get support</div>
+        <div class="crisis-text">University Counselling Service: <strong>01865 270300</strong>. Samaritans: <strong>116 123</strong> (free, 24/7). You deserve real support.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider">✦ ✦ ✦</div>
+
+  <!-- EXISTING TIPS condensed -->
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:0.75rem;">Foundations</div>
+  <div class="tip-card lavender"><div class="tip-icon">🧠</div><div class="tip-title">University Counselling Service</div><div class="tip-body">Free and genuinely good. Register early — there's always a wait. Go before you're struggling, not after.</div></div>
+  <div class="tip-card rose"><div class="tip-icon">🌿</div><div class="tip-title">Green space daily</div><div class="tip-body">Christ Church Meadow, Port Meadow, University Parks. 30 minutes of natural light does more than most paid wellness things. Free forever.</div></div>
+  <div class="tip-card sage"><div class="tip-icon">🚲</div><div class="tip-title">Cycle & move</div><div class="tip-body">Movement is medicine. Cycling, running, gym — whatever gets you out of your head and into your body.</div></div>
+  <div class="tip-card gold"><div class="tip-icon">🌸</div><div class="tip-title">One treat per week — guilt-free</div><div class="tip-body">A nice coffee, Blackwell's bargain shelf, a long bath. Budget for it. It is not a luxury. It is maintenance.</div></div>
+  <div class="tip-card rose"><div class="tip-icon">👯‍♀️</div><div class="tip-title">College & AOPP events</div><div class="tip-body">Show up even when you don't feel like it. Connection doesn't happen passively — you have to walk through the door.</div></div>
 </div>
+
 
 <!-- BUDGET TAB -->
 <div id="tab-budget" class="panel">
@@ -479,6 +668,125 @@
     <div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--text-mid);margin-bottom:6px;">On Mounjaro</div>
     <div style="font-size:12px;color:var(--text-soft);line-height:1.6;">At £200/month, this would exceed your buffer. Try the NHS GP route first — a referral costs nothing and is genuinely worth pursuing before paying privately.</div>
   </div>
+
+  <!-- SPENDING TRACKER -->
+  <div style="margin-top:1.5rem;">
+    <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:0.4rem;">This month's spending</div>
+    <div style="font-size:12px;color:var(--text-soft);margin-bottom:1rem;">Drag the sliders to what you actually spent. Green = on track, red = over budget.</div>
+
+    <div id="spend-rows"></div>
+
+    <div style="background:white;border:1px solid rgba(232,160,160,0.2);border-radius:14px;padding:14px 16px;margin-top:0.75rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:13px;color:var(--text-mid);font-weight:500;">Total spent (variable)</span>
+        <span style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);" id="total-actual">£0</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:13px;color:var(--text-mid);font-weight:500;">Budget (variable)</span>
+        <span style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);">£400</span>
+      </div>
+      <div style="height:1px;background:rgba(232,160,160,0.15);margin-bottom:10px;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;font-weight:500;color:var(--text-mid);">Buffer remaining</span>
+        <span style="font-family:'Playfair Display',serif;font-size:22px;font-weight:600;" id="buffer-display">£150</span>
+      </div>
+      <div style="margin-top:8px;height:8px;background:var(--blush);border-radius:4px;overflow:hidden;">
+        <div id="budget-health-bar" style="height:100%;border-radius:4px;background:#A8C4A2;width:100%;transition:width 0.3s,background 0.3s;"></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-soft);margin-top:6px;" id="budget-status-msg">You're on track 🌸</div>
+    </div>
+
+    <div style="background:white;border:1px solid rgba(232,160,160,0.15);border-radius:14px;padding:14px 16px;margin-top:10px;">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--text-dark);margin-bottom:10px;">Monthly history</div>
+      <div id="budget-history-list"><div style="font-size:12px;color:var(--text-soft);font-style:italic;text-align:center;padding:6px 0;">No months saved yet. Hit "Save this month" to start tracking.</div></div>
+      <button onclick="saveMonthSnapshot()" style="margin-top:10px;width:100%;padding:10px;background:var(--rose-deep,#C97070);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:white;cursor:pointer;letter-spacing:0.5px;">Save this month ✦</button>
+      <button onclick="clearBudgetHistory()" style="margin-top:6px;width:100%;padding:8px;background:none;border:1px solid rgba(232,160,160,0.2);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-soft);cursor:pointer;letter-spacing:1px;">clear history</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXERCISE TAB -->
+<div id="tab-exercise" class="panel">
+  <div class="affirmation">
+    <div class="affirmation-text">"Strong body, strong mind. Three sessions a week is enough to transform — consistency beats intensity every time."</div>
+  </div>
+
+  <div style="background:var(--blush-light);border:1px solid rgba(232,160,160,0.3);border-radius:14px;padding:12px 16px;margin-bottom:1.25rem;">
+    <div style="font-size:11px;color:var(--text-soft);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">Your weekly split</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+      <span style="font-size:12px;background:#FFE8F0;color:#C0407A;padding:4px 12px;border-radius:10px;">Mon · Glutes & lower</span>
+      <span style="font-size:12px;background:var(--lavender-light);color:#7A6898;padding:4px 12px;border-radius:10px;">Wed · Upper & core</span>
+      <span style="font-size:12px;background:var(--sage-light);color:#5A8A54;padding:4px 12px;border-radius:10px;">Fri · Full body burn</span>
+    </div>
+  </div>
+
+  <!-- MONDAY -->
+  <div class="day-label">💗 Monday · Glutes & Lower Body</div>
+  <div class="checkpoint-group">
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Warm up — 5 min walk/bike to gym</div><div class="cp-note">Never skip this. Cold muscles = injury.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Barbell or goblet squats — 4 sets × 10 reps</div><div class="cp-note">Drive through your heels. Keep chest tall.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Romanian deadlifts — 3 sets × 12 reps</div><div class="cp-note">Hinge at hips, feel the hamstring stretch.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Hip thrusts — 4 sets × 12 reps</div><div class="cp-note">The glute builder. Squeeze hard at the top.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Walking lunges — 3 sets × 10 each leg</div><div class="cp-note">Add dumbbells when bodyweight feels easy.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Cable kickbacks — 3 sets × 15 each leg</div><div class="cp-note">Slow and controlled. Feel the glute, not the hip.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Cool down stretch — 5 minutes</div><div class="cp-note">Hip flexors, quads, hamstrings. You'll thank yourself tomorrow.</div></div><span class="cp-tag gym">gym</span></div>
+  </div>
+
+  <!-- WEDNESDAY -->
+  <div class="day-label">💜 Wednesday · Upper Body & Core</div>
+  <div class="checkpoint-group">
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Warm up — 5 min light cardio or arm circles</div><div class="cp-note">Get the shoulders warm before pressing.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Dumbbell shoulder press — 4 sets × 10 reps</div><div class="cp-note">Seated or standing. Core tight throughout.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Lat pulldown — 3 sets × 12 reps</div><div class="cp-note">Pull to your chest, squeeze shoulder blades together.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Dumbbell chest press — 3 sets × 10 reps</div><div class="cp-note">On a bench. Full range of motion.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Seated dumbbell rows — 3 sets × 12 reps</div><div class="cp-note">Builds that strong, defined back.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Plank — 3 × 30–45 seconds</div><div class="cp-note">Straight line head to heels. Breathe.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Ab work — 3 sets (crunches or leg raises)</div><div class="cp-note">Pick one and do it properly.</div></div><span class="cp-tag gym">gym</span></div>
+  </div>
+
+  <!-- FRIDAY -->
+  <div class="day-label">💚 Friday · Full Body Burn</div>
+  <div class="checkpoint-group">
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Warm up — 5 min treadmill or rowing machine</div><div class="cp-note">Get the heart rate up before lifting.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Deadlifts — 4 sets × 8 reps</div><div class="cp-note">Queen of all lifts. Back straight, drive through heels.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Goblet squats — 3 sets × 12 reps</div><div class="cp-note">Hold a dumbbell at your chest. Deep and controlled.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Step-ups with dumbbells — 3 sets × 10 each leg</div><div class="cp-note">Drive through the heel of the working leg.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Kettlebell swings — 3 sets × 15 reps</div><div class="cp-note">Hip hinge power. Great for glutes and cardio combined.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">Glute bridges — 3 sets × 15 reps</div><div class="cp-note">Finish strong. Add a plate on your hips when ready.</div></div><span class="cp-tag gym">gym</span></div>
+    <div class="checkpoint" onclick="toggle(this)"><div class="cp-box"><span class="cp-check">✓</span></div><div class="cp-content"><div class="cp-text">10 min cooldown walk + full stretch</div><div class="cp-note">You crushed the week. Honour your body.</div></div><span class="cp-tag gym">gym</span></div>
+  </div>
+
+  <div class="tip-card rose" style="margin-top:0.5rem;">
+    <div class="tip-icon">📈</div>
+    <div class="tip-title">Progressive overload</div>
+    <div class="tip-body">Every 1–2 weeks, add a little more weight or one more rep. This is what makes your body change over time. Keep a note in your phone of what weights you used.</div>
+  </div>
+
+  <div class="tip-card sage">
+    <div class="tip-icon">🥚</div>
+    <div class="tip-title">Fuel your sessions</div>
+    <div class="tip-body">Eat before the gym — even just eggs on toast. Protein after is important too. Your meals are already well set up for this.</div>
+  </div>
+
+  <div class="tip-card lavender">
+    <div class="tip-icon">😴</div>
+    <div class="tip-title">Rest days matter</div>
+    <div class="tip-body">Tue, Thu, Sat, Sun are rest days. That doesn't mean nothing — cycling and walking still count. But no gym. Muscles grow on rest days, not gym days.</div>
+  </div>
+
+  <!-- WORKOUT TRACKER -->
+  <div style="background:white;border:1px solid rgba(232,160,160,0.2);border-radius:14px;padding:14px 16px;margin-bottom:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--text-dark);">Workout history</div>
+      <span style="font-size:10px;color:var(--text-soft);letter-spacing:1px;text-transform:uppercase;">auto-logged</span>
+    </div>
+    <div id="workout-log" style="display:flex;flex-direction:column;gap:6px;min-height:40px;">
+      <div style="font-size:12px;color:var(--text-faint,#D4ADAD);font-style:italic;text-align:center;padding:8px 0;" id="no-log-msg">No workouts logged yet. Complete a full session to log it! 🌸</div>
+    </div>
+    <button onclick="clearWorkoutLog()" style="margin-top:12px;width:100%;padding:8px;background:none;border:1px solid rgba(232,160,160,0.2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-soft);cursor:pointer;letter-spacing:1px;">clear history</button>
+  </div>
+
+  <button class="reset-btn" onclick="resetExercise()">✦ reset today's exercise checkpoints</button>
 </div>
 
 <script>
@@ -487,11 +795,13 @@
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
     btn.classList.add('active');
+    if (name === 'exercise') renderWorkoutLog();
   }
 
   function toggle(el) {
     el.classList.toggle('checked');
     updateProgress();
+    checkWorkoutComplete(el);
   }
 
   function updateProgress() {
@@ -502,8 +812,93 @@
   }
 
   function resetAll() {
-    document.querySelectorAll('.checkpoint').forEach(c => c.classList.remove('checked'));
+    document.querySelectorAll('#tab-daily .checkpoint').forEach(c => c.classList.remove('checked'));
     updateProgress();
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('#tab-exercise .checkpoint').forEach(c => c.classList.remove('checked'));
+  }
+
+  // WORKOUT TRACKER
+  const WORKOUT_SECTIONS = [
+    { id: 'mon', label: 'Monday · Glutes & Lower Body', emoji: '💗', checkpoints: 7 },
+    { id: 'wed', label: 'Wednesday · Upper & Core', emoji: '💜', checkpoints: 7 },
+    { id: 'fri', label: 'Friday · Full Body Burn', emoji: '💚', checkpoints: 7 },
+  ];
+
+  function getWorkoutLog() {
+    try { return JSON.parse(localStorage.getItem('vashti_workout_log') || '[]'); }
+    catch { return []; }
+  }
+
+  function saveWorkoutLog(log) {
+    try { localStorage.setItem('vashti_workout_log', JSON.stringify(log)); } catch {}
+  }
+
+  function checkWorkoutComplete(changedEl) {
+    const tab = document.getElementById('tab-exercise');
+    const groups = tab.querySelectorAll('.checkpoint-group');
+    const dayLabels = tab.querySelectorAll('.day-label');
+
+    groups.forEach((group, i) => {
+      const all = group.querySelectorAll('.checkpoint');
+      const checked = group.querySelectorAll('.checkpoint.checked');
+      if (all.length > 0 && checked.length === all.length) {
+        const label = dayLabels[i] ? dayLabels[i].textContent.trim() : WORKOUT_SECTIONS[i]?.label;
+        const emoji = WORKOUT_SECTIONS[i]?.emoji || '🏋️';
+        logWorkout(label, emoji);
+      }
+    });
+  }
+
+  function logWorkout(label, emoji) {
+    const log = getWorkoutLog();
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    const key = label + '_' + now.toDateString();
+    if (log.find(e => e.key === key)) return;
+    log.unshift({ key, label, emoji, date: dateStr, time: timeStr });
+    if (log.length > 50) log.pop();
+    saveWorkoutLog(log);
+    renderWorkoutLog();
+  }
+
+  function renderWorkoutLog() {
+    const log = getWorkoutLog();
+    const container = document.getElementById('workout-log');
+    const noMsg = document.getElementById('no-log-msg');
+    if (!container) return;
+
+    const existing = container.querySelectorAll('.log-entry');
+    existing.forEach(e => e.remove());
+
+    if (log.length === 0) {
+      if (noMsg) noMsg.style.display = 'block';
+      return;
+    }
+    if (noMsg) noMsg.style.display = 'none';
+
+    log.forEach(entry => {
+      const div = document.createElement('div');
+      div.className = 'log-entry';
+      div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--blush-light);border:1px solid rgba(232,160,160,0.2);border-radius:10px;';
+      div.innerHTML = `
+        <span style="font-size:16px;">${entry.emoji}</span>
+        <div style="flex:1;">
+          <div style="font-size:12px;font-weight:500;color:var(--text-dark);">${entry.label.replace(/^[^\·]+·\s*/, '')}</div>
+          <div style="font-size:11px;color:var(--text-soft);">${entry.date} · ${entry.time}</div>
+        </div>
+        <span style="font-size:11px;background:var(--sage-light);color:#5A8A54;padding:2px 8px;border-radius:8px;">done ✓</span>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function clearWorkoutLog() {
+    try { localStorage.removeItem('vashti_workout_log'); } catch {}
+    renderWorkoutLog();
   }
 
   const affirmations = [
@@ -513,7 +908,217 @@
     '"You chose Oxford. You can choose yourself too."',
     '"A DPhil is hard. Being kind to yourself is not optional."',
   ];
+  // SPENDING TRACKER
+  const BUDGET_CATS = [
+    { label: 'Groceries',     budget: 150, color: '#A8C4A2' },
+    { label: 'Transport',     budget: 80,  color: '#7EB8D4' },
+    { label: 'Eating out',    budget: 60,  color: '#C4B5D9' },
+    { label: 'Leisure',       budget: 60,  color: '#E8C4A0' },
+    { label: 'Personal care', budget: 40,  color: '#D9A0C4' },
+    { label: 'Phone',         budget: 10,  color: '#B0B0B0' },
+  ];
+
+  const spendActual = {};
+  BUDGET_CATS.forEach(c => spendActual[c.label] = 0);
+
+  function buildSpendRows() {
+    const container = document.getElementById('spend-rows');
+    if (!container) return;
+    container.innerHTML = '';
+    BUDGET_CATS.forEach(cat => {
+      const row = document.createElement('div');
+      row.style.cssText = 'background:white;border:1px solid rgba(232,160,160,0.15);border-radius:12px;padding:12px 14px;margin-bottom:8px;';
+      row.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:${cat.color};flex-shrink:0;"></div>
+            <span style="font-size:13px;color:var(--text-dark);">${cat.label}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:12px;color:var(--text-soft);">budget £${cat.budget}</span>
+            <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:500;" id="val-${cat.label.replace(/ /g,'-')}">£0</span>
+            <span style="font-size:11px;padding:2px 8px;border-radius:8px;" id="tag-${cat.label.replace(/ /g,'-')}"></span>
+          </div>
+        </div>
+        <input type="range" min="0" max="${Math.round(cat.budget * 2)}" step="1" value="0"
+          style="width:100%;accent-color:${cat.color};"
+          oninput="updateSpend('${cat.label}', this.value)" />
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  function updateSpend(label, val) {
+    spendActual[label] = parseInt(val);
+    const key = label.replace(/ /g, '-');
+    const valEl = document.getElementById('val-' + key);
+    const tagEl = document.getElementById('tag-' + key);
+    const cat = BUDGET_CATS.find(c => c.label === label);
+    if (valEl) valEl.textContent = '£' + val;
+    if (tagEl) {
+      const over = parseInt(val) > cat.budget;
+      tagEl.textContent = over ? 'over' : 'ok';
+      tagEl.style.background = over ? '#FCEBEB' : '#EAF3DE';
+      tagEl.style.color = over ? '#A32D2D' : '#3B6D11';
+    }
+    updateBudgetSummary();
+  }
+
+  function updateBudgetSummary() {
+    const totalSpent = Object.values(spendActual).reduce((a, b) => a + b, 0);
+    const variableBudget = 400;
+    const buffer = 150 + (variableBudget - totalSpent);
+    const bufferEl = document.getElementById('buffer-display');
+    const totalEl = document.getElementById('total-actual');
+    const barEl = document.getElementById('budget-health-bar');
+    const msgEl = document.getElementById('budget-status-msg');
+    if (totalEl) totalEl.textContent = '£' + totalSpent;
+    if (bufferEl) {
+      bufferEl.textContent = buffer >= 0 ? '£' + buffer : '-£' + Math.abs(buffer);
+      bufferEl.style.color = buffer < 0 ? '#A32D2D' : buffer < 50 ? '#BA7517' : '#3B6D11';
+    }
+    if (barEl) {
+      const pct = Math.max(0, Math.min(100, (buffer / 150) * 100));
+      barEl.style.width = pct + '%';
+      barEl.style.background = buffer < 0 ? '#E24B4A' : buffer < 50 ? '#EF9F27' : '#A8C4A2';
+    }
+    if (msgEl) {
+      if (buffer < 0) msgEl.textContent = 'Over budget by £' + Math.abs(buffer) + ' — review your spending 🔍';
+      else if (buffer < 50) msgEl.textContent = 'Getting tight — watch the rest of the month 🟡';
+      else msgEl.textContent = 'You\'re on track 🌸';
+    }
+  }
+
+  function saveMonthSnapshot() {
+    const now = new Date();
+    const monthLabel = now.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    const totalSpent = Object.values(spendActual).reduce((a, b) => a + b, 0);
+    const buffer = 150 + (400 - totalSpent);
+    try {
+      const history = JSON.parse(localStorage.getItem('vashti_budget_history') || '[]');
+      history.unshift({ month: monthLabel, total: totalSpent, buffer, breakdown: {...spendActual} });
+      if (history.length > 12) history.pop();
+      localStorage.setItem('vashti_budget_history', JSON.stringify(history));
+    } catch {}
+    renderBudgetHistory();
+  }
+
+  function renderBudgetHistory() {
+    const container = document.getElementById('budget-history-list');
+    if (!container) return;
+    let history = [];
+    try { history = JSON.parse(localStorage.getItem('vashti_budget_history') || '[]'); } catch {}
+    if (history.length === 0) {
+      container.innerHTML = '<div style="font-size:12px;color:var(--text-soft);font-style:italic;text-align:center;padding:6px 0;">No months saved yet. Hit "Save this month" to start tracking.</div>';
+      return;
+    }
+    container.innerHTML = history.map(h => {
+      const ok = h.buffer >= 0;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:${ok ? 'var(--sage-light)' : '#FCEBEB'};border-radius:10px;margin-bottom:6px;">
+        <span style="font-size:12px;color:var(--text-dark);font-weight:500;">${h.month}</span>
+        <div style="text-align:right;">
+          <div style="font-size:12px;color:var(--text-mid);">spent £${h.total}</div>
+          <div style="font-size:11px;color:${ok ? '#3B6D11' : '#A32D2D'};">${ok ? 'buffer £' + h.buffer : 'over by £' + Math.abs(h.buffer)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function clearBudgetHistory() {
+    try { localStorage.removeItem('vashti_budget_history'); } catch {}
+    renderBudgetHistory();
+  }
+
   document.getElementById('affirmation-text').textContent = affirmations[new Date().getDay() % affirmations.length];
+  // WELLNESS INTERACTIONS
+  let selectedMood = null;
+
+  function selectMood(btn, emoji, label) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMood = { emoji, label };
+    const resp = document.getElementById('mood-response');
+    const saveBtn = document.getElementById('save-mood-btn');
+    const responses = {
+      'Flourishing': { bg: '#EAF3DE', color: '#3B6D11', msg: 'You\'re flourishing today, Vashti. Lean into it. Do the hard work while the energy is here. 🌸' },
+      'Good':        { bg: '#EAF3DE', color: '#3B6D11', msg: 'A good day. That\'s everything. Show up, do your bit, be grateful for it.' },
+      'Okay':        { bg: '#FAF0DC', color: '#9A7830', msg: 'Okay is enough. You don\'t have to be flourishing to make progress. One small thing today.' },
+      'Struggling':  { bg: '#FDF0F0', color: '#A32D2D', msg: 'Struggling is allowed. It doesn\'t mean you\'re failing. Scroll down to "On a hard day" — there\'s something there for you.' },
+      'Really hard': { bg: '#FDF0F0', color: '#A32D2D', msg: 'I see you. Really hard days happen to everyone doing hard things. Be gentle with yourself today. Call someone from home if you can. 🙏' },
+    };
+    const r = responses[label] || responses['Okay'];
+    resp.style.background = r.bg;
+    resp.style.color = r.color;
+    resp.style.border = '1px solid ' + r.color + '33';
+    resp.textContent = r.msg;
+    resp.style.display = 'block';
+    saveBtn.style.display = 'inline-block';
+  }
+
+  function saveMoodLog() {
+    if (!selectedMood) return;
+    try {
+      const log = JSON.parse(localStorage.getItem('vashti_mood_log') || '[]');
+      const now = new Date();
+      log.unshift({ emoji: selectedMood.emoji, label: selectedMood.label, date: now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) });
+      if (log.length > 60) log.pop();
+      localStorage.setItem('vashti_mood_log', JSON.stringify(log));
+    } catch {}
+    renderMoodHistory();
+    document.getElementById('save-mood-btn').textContent = 'Logged ✓';
+    document.getElementById('save-mood-btn').style.background = '#5A8A54';
+  }
+
+  function renderMoodHistory() {
+    const container = document.getElementById('mood-history');
+    if (!container) return;
+    let log = [];
+    try { log = JSON.parse(localStorage.getItem('vashti_mood_log') || '[]'); } catch {}
+    if (log.length === 0) {
+      container.innerHTML = '<span style="font-size:12px;color:var(--text-soft);font-style:italic;">No moods logged yet.</span>';
+      return;
+    }
+    container.innerHTML = log.slice(0, 20).map(e =>
+      `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;" title="${e.label} · ${e.date}">
+        <span style="font-size:18px;">${e.emoji}</span>
+        <span style="font-size:9px;color:var(--text-soft);">${e.date}</span>
+      </div>`
+    ).join('');
+  }
+
+  function clearMoodLog() {
+    try { localStorage.removeItem('vashti_mood_log'); } catch {}
+    renderMoodHistory();
+  }
+
+  function toggleRitual(el) { el.classList.toggle('checked'); }
+
+  function saveReflection() {
+    const data = {};
+    for (let i = 1; i <= 5; i++) {
+      const el = document.getElementById('ref-' + i);
+      if (el) data['q' + i] = el.value;
+    }
+    try {
+      const now = new Date();
+      const key = 'vashti_reflection_' + now.toISOString().slice(0, 10);
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch {}
+    const msg = document.getElementById('reflection-saved');
+    if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 3000); }
+  }
+
+  function clearReflection() {
+    for (let i = 1; i <= 5; i++) {
+      const el = document.getElementById('ref-' + i);
+      if (el) el.value = '';
+    }
+  }
+
+  renderWorkoutLog();
+  buildSpendRows();
+  renderBudgetHistory();
+  renderMoodHistory();
 </script>
 </body>
 </html>
