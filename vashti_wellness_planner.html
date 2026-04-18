@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vashti's Frugal & Flourishing Life Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #E8A0A0;
+    --rose-deep: #C97070;
+    --blush: #F5D9D9;
+    --blush-light: #FDF0F0;
+    --sage: #A8C4A2;
+    --sage-light: #E8F2E6;
+    --gold: #D4A853;
+    --gold-light: #FAF0DC;
+    --lavender: #C4B5D9;
+    --lavender-light: #F0EBF8;
+    --cream: #FDFAF6;
+    --text-dark: #3D2B2B;
+    --text-mid: #7A5C5C;
+    --text-soft: #B89090;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #F5D9D9 0%, #FDF0F0 40%, #F0EBF8 100%);
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(232,160,160,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '✦ ✦ ✦';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 8px;
+    color: var(--rose);
+    opacity: 0.6;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--text-dark);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .header-title em {
+    color: var(--rose-deep);
+    font-style: italic;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--text-soft);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .budget-strip {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-bottom: 1px solid rgba(232,160,160,0.2);
+  }
+
+  .budget-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--blush-light);
+    border: 1px solid rgba(232,160,160,0.3);
+    border-radius: 20px;
+    padding: 8px 16px;
+  }
+
+  .budget-pill.gold { background: var(--gold-light); border-color: rgba(212,168,83,0.3); }
+  .budget-pill.sage { background: var(--sage-light); border-color: rgba(168,196,162,0.4); }
+
+  .pill-label { font-size: 10px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 1px; }
+  .pill-value { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--text-dark); font-weight: 600; }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: white;
+    border-bottom: 1px solid rgba(232,160,160,0.2);
+    overflow-x: auto;
+    padding: 0 1rem;
+  }
+
+  .tab {
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-soft);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+
+  .tab.active { color: var(--rose-deep); border-bottom-color: var(--rose-deep); }
+  .tab:hover { color: var(--rose-deep); }
+
+  .panel { display: none; padding: 1.25rem 1.25rem 2rem; }
+  .panel.active { display: block; }
+
+  .day-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .day-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(232,160,160,0.4), transparent);
+  }
+
+  .checkpoint-group { margin-bottom: 1.25rem; }
+
+  .checkpoint {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: white;
+    border: 1px solid rgba(232,160,160,0.15);
+    border-radius: 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .checkpoint:hover { border-color: rgba(232,160,160,0.4); background: var(--blush-light); }
+  .checkpoint.checked { background: var(--blush-light); border-color: rgba(201,112,112,0.3); }
+  .checkpoint.checked .cp-text { text-decoration: line-through; color: var(--text-soft); }
+
+  .cp-box {
+    width: 18px; height: 18px; flex-shrink: 0;
+    border: 1.5px solid rgba(201,112,112,0.4);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+
+  .checkpoint.checked .cp-box { background: var(--rose-deep); border-color: var(--rose-deep); }
+
+  .cp-check { display: none; color: white; font-size: 11px; font-weight: 700; }
+  .checkpoint.checked .cp-check { display: block; }
+
+  .cp-content { flex: 1; }
+  .cp-text { font-size: 13px; color: var(--text-dark); line-height: 1.4; font-weight: 400; }
+  .cp-note { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
+
+  .cp-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .cp-tag.food { background: #FDEEE0; color: #C97040; }
+  .cp-tag.move { background: var(--sage-light); color: #5A8A54; }
+  .cp-tag.mind { background: var(--lavender-light); color: #7A6898; }
+  .cp-tag.money { background: var(--gold-light); color: #9A7830; }
+
+  .progress-bar-wrap {
+    background: white;
+    border: 1px solid rgba(232,160,160,0.2);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 1.25rem;
+  }
+
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 12px; color: var(--text-mid); font-weight: 500; }
+  .progress-count { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--rose-deep); }
+  .progress-track { height: 6px; background: var(--blush); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(to right, var(--rose), var(--rose-deep)); border-radius: 3px; transition: width 0.4s ease; }
+
+  .affirmation {
+    background: linear-gradient(135deg, var(--lavender-light), var(--blush-light));
+    border: 1px solid rgba(196,181,217,0.3);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+
+  .affirmation-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .meal-card {
+    background: white;
+    border: 1px solid rgba(232,160,160,0.15);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .meal-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .meal-type { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-soft); font-weight: 500; }
+  .meal-cost { font-size: 11px; background: var(--gold-light); color: #9A7830; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+  .meal-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--text-dark); margin-bottom: 3px; }
+  .meal-desc { font-size: 12px; color: var(--text-soft); line-height: 1.5; }
+
+  .tip-card { border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; border: 1px solid transparent; }
+  .tip-card.rose { background: var(--blush-light); border-color: rgba(232,160,160,0.3); }
+  .tip-card.sage { background: var(--sage-light); border-color: rgba(168,196,162,0.3); }
+  .tip-card.lavender { background: var(--lavender-light); border-color: rgba(196,181,217,0.3); }
+  .tip-card.gold { background: var(--gold-light); border-color: rgba(212,168,83,0.25); }
+
+  .tip-icon { font-size: 18px; margin-bottom: 6px; }
+  .tip-title { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--text-dark); margin-bottom: 4px; }
+  .tip-body { font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+
+  .budget-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: white; border: 1px solid rgba(232,160,160,0.15); border-radius: 12px; margin-bottom: 6px; }
+  .budget-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .budget-cat { flex: 1; font-size: 13px; color: var(--text-dark); }
+  .budget-amt { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--text-mid); }
+  .budget-bar-mini { width: 60px; height: 4px; background: var(--blush); border-radius: 2px; overflow: hidden; }
+  .budget-bar-fill { height: 100%; border-radius: 2px; }
+
+  .section-divider { text-align: center; font-size: 10px; letter-spacing: 4px; color: var(--rose); opacity: 0.5; margin: 1rem 0; }
+
+  .reset-btn {
+    display: block; width: 100%; padding: 10px;
+    background: none; border: 1px solid rgba(232,160,160,0.3); border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text-soft);
+    cursor: pointer; letter-spacing: 1px; transition: all 0.2s; margin-top: 1rem;
+  }
+  .reset-btn:hover { background: var(--blush-light); color: var(--rose-deep); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">Vashti's <em>Frugal & Flourishing</em><br>Life Planner</div>
+  <div style="margin-top:8px" class="header-sub">Oxford DPhil · £1,700/month · Living well on less</div>
+</div>
+
+<div class="budget-strip">
+  <div class="budget-pill"><span class="pill-label">Income</span><span class="pill-value">£1,700</span></div>
+  <div class="budget-pill gold"><span class="pill-label">Auto saves</span><span class="pill-value">£250</span></div>
+  <div class="budget-pill"><span class="pill-label">Rent</span><span class="pill-value">£900</span></div>
+  <div class="budget-pill sage"><span class="pill-label">Spendable</span><span class="pill-value">£550</span></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('daily', this)">✦ Daily</button>
+  <button class="tab" onclick="showTab('meals', this)">Meals</button>
+  <button class="tab" onclick="showTab('wellness', this)">Wellness</button>
+  <button class="tab" onclick="showTab('budget', this)">Budget</button>
+</div>
+
+<!-- DAILY TAB -->
+<div id="tab-daily" class="panel active">
+  <div class="affirmation">
+    <div class="affirmation-text" id="affirmation-text">"You are building something extraordinary. A simpler day today is the foundation of a bigger life tomorrow."</div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Today's checkpoints</span>
+      <span class="progress-count" id="prog-count">0 / 12</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="day-label">🌸 Morning</div>
+  <div class="checkpoint-group">
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Slow start — no phone for 20 minutes</div><div class="cp-note">Tea, stretch, breathe. Protect this time.</div></div>
+      <span class="cp-tag mind">mind</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Eat a proper breakfast at home</div><div class="cp-note">Eggs, yoghurt, fruit — not a coffee on the go</div></div>
+      <span class="cp-tag food">food</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Cycle or walk to your destination</div><div class="cp-note">Free movement built into the day</div></div>
+      <span class="cp-tag move">move</span>
+    </div>
+  </div>
+
+  <div class="day-label">☀️ Midday</div>
+  <div class="checkpoint-group">
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Eat lunch from home or batch cook</div><div class="cp-note">Saves £5–8 vs buying out</div></div>
+      <span class="cp-tag food">food</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Step outside for 15 minutes</div><div class="cp-note">Christ Church Meadow or University Parks</div></div>
+      <span class="cp-tag mind">mind</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">No food delivery apps today</div><div class="cp-note">Saves £10–15 and usually feels better anyway</div></div>
+      <span class="cp-tag money">money</span>
+    </div>
+  </div>
+
+  <div class="day-label">🌙 Evening</div>
+  <div class="checkpoint-group">
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Cook dinner at home</div><div class="cp-note">Even something simple counts</div></div>
+      <span class="cp-tag food">food</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">30 minutes of movement</div><div class="cp-note">Run, YouTube workout, or long walk</div></div>
+      <span class="cp-tag move">move</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">One moment of social connection</div><div class="cp-note">A message, a call, a conversation with a colleague</div></div>
+      <span class="cp-tag mind">mind</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Wind down screen-free before bed</div><div class="cp-note">Even 20 minutes makes a real difference to sleep</div></div>
+      <span class="cp-tag mind">mind</span>
+    </div>
+  </div>
+
+  <div class="day-label">📖 Weekly</div>
+  <div class="checkpoint-group">
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">Sunday batch cook (2 dishes)</div><div class="cp-note">Sets up the whole week — saves money and decision fatigue</div></div>
+      <span class="cp-tag food">food</span>
+    </div>
+    <div class="checkpoint" onclick="toggle(this)">
+      <div class="cp-box"><span class="cp-check">✓</span></div>
+      <div class="cp-content"><div class="cp-text">One treat this week (conscious, guilt-free)</div><div class="cp-note">A nice coffee, Blackwell's bargain shelf, a long bath</div></div>
+      <span class="cp-tag mind">mind</span>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">✦ reset today's checkpoints</button>
+</div>
+
+<!-- MEALS TAB -->
+<div id="tab-meals" class="panel">
+  <div class="affirmation">
+    <div class="affirmation-text">"Cooking for yourself is an act of self-love — and at Lidl prices, an act of financial wisdom too."</div>
+  </div>
+
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Weekly meal rhythm</div>
+
+  <div class="meal-card">
+    <div class="meal-card-header"><span class="meal-type">Breakfast (daily)</span><span class="meal-cost">~£0.60</span></div>
+    <div class="meal-name">Eggs + toast or fried plantain</div>
+    <div class="meal-desc">Scrambled or boiled eggs with toast on weekdays. Fried eggs with plantain on slower mornings — a proper treat for almost nothing.</div>
+  </div>
+  <div class="meal-card">
+    <div class="meal-card-header"><span class="meal-type">Lunch (batch)</span><span class="meal-cost">~£1.20</span></div>
+    <div class="meal-name">Tomato & pepper rice soup or tuna pasta</div>
+    <div class="meal-desc">Tomato, pepper, onion, spinach simmered into a light rice soup. Or pasta with tinned tuna, tinned tomatoes, garlic and onion. Both batch well and last 3–4 days.</div>
+  </div>
+  <div class="meal-card">
+    <div class="meal-card-header"><span class="meal-type">Dinner Mon / Wed / Fri</span><span class="meal-cost">~£2.00</span></div>
+    <div class="meal-name">Jollof rice with chicken thighs</div>
+    <div class="meal-desc">Frozen chicken thighs from Lidl, long-grain rice, tinned tomatoes, scotch bonnet, peppers, onions. Batch for two nights. Your classic.</div>
+  </div>
+  <div class="meal-card">
+    <div class="meal-card-header"><span class="meal-type">Dinner Tue / Thu</span><span class="meal-cost">~£1.80</span></div>
+    <div class="meal-name">Beef & pepper pasta or egg fried rice</div>
+    <div class="meal-desc">Beef or lamb mince with onions, peppers, tinned tomatoes over pasta — a West African-ish bolognese. Or stir-fried rice with egg, carrots, spinach and soy sauce.</div>
+  </div>
+  <div class="meal-card">
+    <div class="meal-card-header"><span class="meal-type">Dinner Saturday</span><span class="meal-cost">~£3–15</span></div>
+    <div class="meal-name">Treat night</div>
+    <div class="meal-desc">Grilled fish with rice and sautéed spinach, or whatever you actually fancy. You've earned it.</div>
+  </div>
+  <div class="meal-card">
+    <div class="meal-card-header"><span class="meal-type">Weekly shop</span><span class="meal-cost">£30–35</span></div>
+    <div class="meal-name">Lidl on Cowley Road</div>
+    <div class="meal-desc">Always stock: eggs, chicken thighs, beef/lamb mince, tinned tuna, tinned tomatoes, rice, pasta, plantain, spinach, peppers, carrots, onions, garlic, tomatoes.</div>
+  </div>
+</div>
+
+<!-- WELLNESS TAB -->
+<div id="tab-wellness" class="panel">
+  <div class="affirmation">
+    <div class="affirmation-text">"A DPhil is a marathon. Your wellbeing is not a luxury — it is your most important research tool."</div>
+  </div>
+
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Mind</div>
+  <div class="tip-card lavender"><div class="tip-icon">🧠</div><div class="tip-title">University Counselling Service</div><div class="tip-body">Free and genuinely good. Register early — there's always a wait. Don't wait until you're struggling; go when things feel manageable too.</div></div>
+  <div class="tip-card rose"><div class="tip-icon">🌿</div><div class="tip-title">Green space daily</div><div class="tip-body">Christ Church Meadow, Port Meadow, University Parks. 30 minutes of natural light and walking does more than most paid wellness things. Free forever.</div></div>
+  <div class="tip-card lavender"><div class="tip-icon">✨</div><div class="tip-title">Protect your mornings</div><div class="tip-body">20 minutes before opening your laptop — tea, a slow breakfast, no scrolling. This one habit anchors the whole day.</div></div>
+
+  <div class="section-divider">✦ ✦ ✦</div>
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Body</div>
+  <div class="tip-card sage"><div class="tip-icon">🚲</div><div class="tip-title">Cycle everywhere</div><div class="tip-body">Secondhand bike from Facebook Marketplace (£50–80). Pays for itself in one month vs buses. Daily movement and mental health boost built in for free.</div></div>
+  <div class="tip-card sage"><div class="tip-icon">🏃‍♀️</div><div class="tip-title">Running routes</div><div class="tip-body">Port Meadow and the Thames Path are stunning. Even 20–30 minutes twice a week transforms mood and sleep. Free, beautiful, yours.</div></div>
+  <div class="tip-card sage"><div class="tip-icon">💪</div><div class="tip-title">University gym (~£10–15/month)</div><div class="tip-body">Heavily subsidised for students. Worth it if structure motivates you. Otherwise, Hybrid Calisthenics on YouTube requires zero equipment and is excellent.</div></div>
+
+  <div class="section-divider">✦ ✦ ✦</div>
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Social & joy</div>
+  <div class="tip-card gold"><div class="tip-icon">🌸</div><div class="tip-title">One conscious treat per week</div><div class="tip-body">A nice coffee, something from Blackwell's bargain shelf, a long bath with candles. Budget for it so it feels like a reward, not guilt.</div></div>
+  <div class="tip-card rose"><div class="tip-icon">👯‍♀️</div><div class="tip-title">College & SU events</div><div class="tip-body">Many are free or subsidised — film screenings, talks, socials, comedy nights. Social connection is not optional during a DPhil. It is essential.</div></div>
+</div>
+
+<!-- BUDGET TAB -->
+<div id="tab-budget" class="panel">
+  <div class="affirmation">
+    <div class="affirmation-text">"Knowing exactly where your money goes is not restriction — it is freedom."</div>
+  </div>
+
+  <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text-dark);margin-bottom:1rem;">Monthly breakdown</div>
+
+  <div class="budget-row"><div class="budget-dot" style="background:#C97070"></div><span class="budget-cat">Rent</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:100%;background:#E8A0A0"></div></div><span class="budget-amt">£900</span></div>
+  <div class="budget-row"><div class="budget-dot" style="background:#D4A853"></div><span class="budget-cat">Auto savings</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:71%;background:#D4A853"></div></div><span class="budget-amt">£250</span></div>
+  <div class="budget-row"><div class="budget-dot" style="background:#A8C4A2"></div><span class="budget-cat">Groceries</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:48%;background:#A8C4A2"></div></div><span class="budget-amt">£150</span></div>
+  <div class="budget-row"><div class="budget-dot" style="background:#7EB8D4"></div><span class="budget-cat">Transport</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:26%;background:#7EB8D4"></div></div><span class="budget-amt">£80</span></div>
+  <div class="budget-row"><div class="budget-dot" style="background:#C4B5D9"></div><span class="budget-cat">Eating out</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:19%;background:#C4B5D9"></div></div><span class="budget-amt">£60</span></div>
+  <div class="budget-row"><div class="budget-dot" style="background:#E8C4A0"></div><span class="budget-cat">Leisure</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:19%;background:#E8C4A0"></div></div><span class="budget-amt">£60</span></div>
+  <div class="budget-row"><div class="budget-dot" style="background:#D9A0C4"></div><span class="budget-cat">Personal care</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:13%;background:#D9A0C4"></div></div><span class="budget-amt">£40</span></div>
+  <div class="budget-row"><div class="budget-dot" style="background:#B0B0B0"></div><span class="budget-cat">Phone</span><div class="budget-bar-mini"><div class="budget-bar-fill" style="width:3%;background:#B0B0B0"></div></div><span class="budget-amt">£10</span></div>
+
+  <div style="background:var(--sage-light);border:1px solid rgba(168,196,162,0.4);border-radius:14px;padding:14px 16px;margin-top:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:13px;color:var(--text-mid);font-weight:500;">Monthly buffer</span>
+      <span style="font-family:'Playfair Display',serif;font-size:20px;color:#5A8A54;font-weight:600;">£150</span>
+    </div>
+    <div style="font-size:11px;color:#7AAA74;margin-top:4px;">Protect this. It's your breathing room.</div>
+  </div>
+
+  <div style="background:var(--blush-light);border:1px solid rgba(232,160,160,0.3);border-radius:14px;padding:14px 16px;margin-top:10px;">
+    <div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--text-mid);margin-bottom:6px;">On Mounjaro</div>
+    <div style="font-size:12px;color:var(--text-soft);line-height:1.6;">At £200/month, this would exceed your buffer. Try the NHS GP route first — a referral costs nothing and is genuinely worth pursuing before paying privately.</div>
+  </div>
+</div>
+
+<script>
+  function showTab(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggle(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('#tab-daily .checkpoint');
+    const checked = document.querySelectorAll('#tab-daily .checkpoint.checked');
+    document.getElementById('prog-count').textContent = checked.length + ' / ' + all.length;
+    document.getElementById('prog-fill').style.width = Math.round((checked.length / all.length) * 100) + '%';
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.checkpoint').forEach(c => c.classList.remove('checked'));
+    updateProgress();
+  }
+
+  const affirmations = [
+    '"You are building something extraordinary. A simpler day today is the foundation of a bigger life tomorrow."',
+    '"Rest is not the opposite of productivity. It is the condition for it."',
+    '"Every meal cooked at home, every walk taken, every pound saved — it all compounds."',
+    '"You chose Oxford. You can choose yourself too."',
+    '"A DPhil is hard. Being kind to yourself is not optional."',
+  ];
+  document.getElementById('affirmation-text').textContent = affirmations[new Date().getDay() % affirmations.length];
+</script>
+</body>
+</html>

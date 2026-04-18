@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vashti — Oxford DPhil & Flourishing</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #E8A0A0;
+    --rose-deep: #C97070;
+    --rose-darker: #A85555;
+    --blush: #F5D9D9;
+    --blush-light: #FDF6F6;
+    --blush-mid: #FAE8E8;
+    --gold: #C9963A;
+    --gold-light: #F7EDD8;
+    --gold-pale: #FBF5E8;
+    --sage: #9DB89A;
+    --sage-light: #EAF2E8;
+    --lavender: #C4B5D9;
+    --cream: #FEFAF5;
+    --warm-white: #FFFDF9;
+    --text-dark: #2C1F1F;
+    --text-mid: #6B4A4A;
+    --text-soft: #B08080;
+    --text-faint: #D4ADAD;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* DECORATIVE ELEMENTS */
+  .petal {
+    position: absolute;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2.5rem;
+    background: rgba(254,250,245,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232,160,160,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-dark);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo em { color: var(--rose-deep); font-style: italic; }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--rose-deep); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 4rem;
+    background: linear-gradient(160deg, #FDF6F6 0%, #FEFAF5 50%, #F7F0FA 100%);
+  }
+
+  .hero-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 10vw, 96px);
+    font-weight: 300;
+    color: var(--text-dark);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-name em {
+    color: var(--rose-deep);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 3vw, 22px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-mid);
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+  }
+
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 2.5rem;
+    color: var(--rose);
+    font-size: 10px;
+    letter-spacing: 6px;
+  }
+
+  .hero-divider::before, .hero-divider::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rose));
+  }
+
+  .hero-divider::after {
+    background: linear-gradient(to left, transparent, var(--rose));
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+
+  .hero-pill {
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(232,160,160,0.4);
+    color: var(--text-mid);
+    background: white;
+  }
+
+  .hero-pill.gold { border-color: rgba(201,150,58,0.4); background: var(--gold-pale); color: #8A6020; }
+
+  .hero-scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-faint);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+
+  .hero-scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--rose), transparent);
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    opacity: 0.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 300;
+    color: var(--text-dark);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  .section-title em { color: var(--rose-deep); font-style: italic; }
+
+  .section-intro {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.8;
+    max-width: 600px;
+    font-weight: 300;
+  }
+
+  .section-divider-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, var(--rose), transparent);
+    margin: 1.5rem 0;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  .about-portrait {
+    position: relative;
+  }
+
+  .about-portrait-frame {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(145deg, var(--blush-mid) 0%, var(--blush-light) 100%);
+    border-radius: 60% 40% 55% 45% / 50% 45% 55% 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(232,160,160,0.2);
+  }
+
+  .about-portrait-initial {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    font-weight: 300;
+    color: var(--rose);
+    opacity: 0.4;
+    font-style: italic;
+    user-select: none;
+  }
+
+  .about-portrait-tag {
+    position: absolute;
+    bottom: 20px;
+    right: -10px;
+    background: white;
+    border: 1px solid rgba(232,160,160,0.3);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--text-mid);
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 20px rgba(200,120,120,0.1);
+  }
+
+  .about-portrait-tag strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-dark);
+  }
+
+  .about-text { }
+
+  .about-bio {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.9;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .about-fact {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid rgba(232,160,160,0.15);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+
+  .fact-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--rose);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  /* RESEARCH */
+  .research-section {
+    background: linear-gradient(160deg, #FDF6F6, #F7F0FA);
+    border-radius: 32px;
+    padding: 4rem;
+    margin: 0 -1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .research-section::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,160,160,0.12), transparent 70%);
+    pointer-events: none;
+  }
+
+  .research-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+  }
+
+  .research-card {
+    background: white;
+    border: 1px solid rgba(232,160,160,0.15);
+    border-radius: 18px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .research-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(200,120,120,0.1);
+  }
+
+  .research-card-icon {
+    font-size: 24px;
+    margin-bottom: 0.75rem;
+  }
+
+  .research-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .research-card-body {
+    font-size: 12.5px;
+    color: var(--text-soft);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .research-card-tag {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    background: var(--blush-mid);
+    color: var(--rose-deeper);
+    color: var(--rose-dark);
+    color: #A06060;
+  }
+
+  /* WELLNESS */
+  .wellness-embed {
+    margin-top: 2.5rem;
+    background: white;
+    border: 1px solid rgba(232,160,160,0.2);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(200,120,120,0.08);
+  }
+
+  .wellness-embed-header {
+    background: linear-gradient(135deg, #F5D9D9, #FDF0F0 50%, #F0EBF8);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(232,160,160,0.15);
+  }
+
+  .wellness-embed-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text-dark);
+  }
+
+  .wellness-embed-title em { color: var(--rose-deep); font-style: italic; }
+
+  .wellness-embed-badge {
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    background: var(--gold-pale);
+    border: 1px solid rgba(201,150,58,0.3);
+    border-radius: 12px;
+    color: #8A6020;
+  }
+
+  .wellness-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .pillar {
+    padding: 1.5rem;
+    border-right: 1px solid rgba(232,160,160,0.12);
+    text-align: center;
+  }
+
+  .pillar:last-child { border-right: none; }
+
+  .pillar-icon { font-size: 24px; margin-bottom: 0.5rem; }
+
+  .pillar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .pillar-desc { font-size: 11.5px; color: var(--text-soft); line-height: 1.6; font-weight: 300; }
+
+  .wellness-cta {
+    padding: 1.25rem 2rem;
+    background: var(--blush-light);
+    border-top: 1px solid rgba(232,160,160,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .wellness-cta-text { font-size: 13px; color: var(--text-mid); font-weight: 300; }
+  .wellness-cta-text strong { font-weight: 500; color: var(--text-dark); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-rose {
+    background: var(--rose-deep);
+    color: white;
+  }
+
+  .btn-rose:hover { background: var(--rose-darker); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: none;
+    border: 1px solid rgba(232,160,160,0.5);
+    color: var(--rose-deep);
+  }
+
+  .btn-outline:hover { background: var(--blush-mid); }
+
+  /* CONTACT / FOOTER */
+  .contact-section {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(160deg, #FDF6F6, #F7F0FA);
+    border-top: 1px solid rgba(232,160,160,0.15);
+  }
+
+  .contact-section .section-title { margin: 0 auto 0.75rem; }
+  .contact-section .section-intro { margin: 0 auto 2rem; text-align: center; }
+
+  .contact-links {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 1px;
+    border-top: 1px solid rgba(232,160,160,0.1);
+  }
+
+  footer em { color: var(--rose); font-style: normal; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE */
+  @media (max-width: 680px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { gap: 1.25rem; }
+    .nav-links a { font-size: 11px; letter-spacing: 1px; }
+    section { padding: 4rem 1.25rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .about-portrait { max-width: 280px; margin: 0 auto; }
+    .research-section { padding: 2.5rem 1.5rem; margin: 0; border-radius: 20px; }
+    .wellness-pillars { grid-template-columns: 1fr; }
+    .pillar { border-right: none; border-bottom: 1px solid rgba(232,160,160,0.12); }
+    .pillar:last-child { border-bottom: none; }
+    .wellness-cta { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><em>V</em>ashti</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#wellness">Wellness</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg-circle" style="width:500px;height:500px;background:radial-gradient(circle,rgba(232,160,160,0.1),transparent 70%);top:-100px;right:-150px;"></div>
+  <div class="hero-bg-circle" style="width:400px;height:400px;background:radial-gradient(circle,rgba(196,181,217,0.1),transparent 70%);bottom:-80px;left:-100px;"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Oxford · DPhil Candidate · AOPP</div>
+    <h1 class="hero-name"><em>V</em>ashti</h1>
+    <p class="hero-tagline">Atmospheric physicist. Researcher of extremes.<br>Building a flourishing life, one day at a time.</p>
+    <div class="hero-divider">✦</div>
+    <div class="hero-pills">
+      <span class="hero-pill">Extreme Weather Attribution</span>
+      <span class="hero-pill">Climate Science</span>
+      <span class="hero-pill gold">Oxford DPhil</span>
+      <span class="hero-pill">Frugal & Flourishing</span>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      scroll
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="fade-up">
+    <div class="section-eyebrow">Who I am</div>
+    <h2 class="section-title">Hello, I'm <em>Vashti</em></h2>
+    <div class="section-divider-line"></div>
+    <p class="section-intro">DPhil candidate in Atmospheric, Oceanic & Planetary Physics at Oxford, supervised by Prof. Myles Allen. Originally from Ghana. Building a research career and a beautiful life on a stipend.</p>
+  </div>
+
+  <div class="about-grid fade-up">
+    <div class="about-portrait">
+      <div class="about-portrait-frame">
+        <span class="about-portrait-initial">V</span>
+      </div>
+      <div class="about-portrait-tag">
+        <strong>Vashti Ayim</strong>
+        Oxford University · AOPP
+      </div>
+    </div>
+
+    <div class="about-text">
+      <p class="about-bio">I study how the probability of extreme weather events changes with global warming — specifically developing reforecast-based methods to quantify how heatwave risk scales with temperature.</p>
+      <p class="about-bio">Outside the lab, I'm passionate about living well within constraints — eating well, moving daily, protecting my mental health, and making the most of Oxford.</p>
+      <div class="about-facts">
+        <div class="about-fact"><div class="fact-dot"></div>DPhil in Atmospheric Physics, University of Oxford</div>
+        <div class="about-fact"><div class="fact-dot"></div>Research focus: extreme weather attribution & reforecast methods</div>
+        <div class="about-fact"><div class="fact-dot"></div>Previously: MAN Group — climate model downscaling & ML</div>
+        <div class="about-fact"><div class="fact-dot"></div>Originally from Ghana 🇬🇭</div>
+        <div class="about-fact"><div class="fact-dot"></div>Christian · Oxford · Making it work</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research" style="padding-top:0;">
+  <div class="research-section fade-up">
+    <div class="section-eyebrow">My work</div>
+    <h2 class="section-title">DPhil <em>Research</em></h2>
+    <div class="section-divider-line"></div>
+    <p class="section-intro">My research sits at the intersection of climate attribution science and probabilistic forecasting — trying to answer: how much more likely did global warming make this heatwave?</p>
+
+    <div class="research-cards">
+      <div class="research-card">
+        <div class="research-card-icon">🌡️</div>
+        <div class="research-card-title">Extreme weather attribution</div>
+        <div class="research-card-body">Quantifying how exceedance probabilities for extreme heat events scale with global mean temperature, using reforecast-based tail slope methods.</div>
+        <span class="research-card-tag">Core thesis</span>
+      </div>
+      <div class="research-card">
+        <div class="research-card-icon">📊</div>
+        <div class="research-card-title">Reforecast tail slopes</div>
+        <div class="research-card-body">Fitting log-linear slopes (d log P / dT) across climate states using ECMWF reforecast data — validated against Nick Leach's counterfactual ensembles.</div>
+        <span class="research-card-tag">Methodology</span>
+      </div>
+      <div class="research-card">
+        <div class="research-card-icon">🔥</div>
+        <div class="research-card-title">Pacific Northwest heatwave</div>
+        <div class="research-card-body">Case study: the 2021 Pacific Northwest event. Risk ratio ~2.2×/°C warming — consistent with counterfactual forecast results at day 11.</div>
+        <span class="research-card-tag">Case study</span>
+      </div>
+      <div class="research-card">
+        <div class="research-card-icon">⚙️</div>
+        <div class="research-card-title">HPC & data pipelines</div>
+        <div class="research-card-body">Building Python/xarray/dask pipelines on AOPP HPC to process ECMWF GRIB/NetCDF reforecast files into DJF M-Climate Zarr datasets.</div>
+        <span class="research-card-tag">Technical</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WELLNESS -->
+<section id="wellness">
+  <div class="fade-up">
+    <div class="section-eyebrow">Living well</div>
+    <h2 class="section-title">Frugal <em>&amp; Flourishing</em></h2>
+    <div class="section-divider-line"></div>
+    <p class="section-intro">A DPhil stipend is finite. Wellbeing is not optional. This is my personal system for eating well, staying active, and protecting my mental health — built for Oxford life on a budget.</p>
+  </div>
+
+  <div class="wellness-embed fade-up">
+    <div class="wellness-embed-header">
+      <div class="wellness-embed-title">The <em>Daily Planner</em></div>
+      <span class="wellness-embed-badge">£1,700 / month</span>
+    </div>
+    <div class="wellness-pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🥘</div>
+        <div class="pillar-title">Eating well</div>
+        <div class="pillar-desc">Real food on a student budget. Batch cooking Sundays. Lidl on Cowley Road. Jollof rice always.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🚲</div>
+        <div class="pillar-title">Moving daily</div>
+        <div class="pillar-desc">Cycling everywhere. Running along Port Meadow. 30 minutes of movement, however it comes.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌿</div>
+        <div class="pillar-title">Mental health</div>
+        <div class="pillar-desc">Green space daily. Slow mornings. Social connection. One conscious treat per week.</div>
+      </div>
+    </div>
+    <div class="wellness-cta">
+      <div class="wellness-cta-text"><strong>Interactive daily planner</strong> — checkpoints, meals, budget & wellness tips</div>
+      <a href="vashti_wellness_planner.html" class="btn btn-rose">Open planner ✦</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="contact-section" id="contact">
+  <div class="section-eyebrow" style="text-align:center;">Get in touch</div>
+  <h2 class="section-title" style="text-align:center;">Say <em>hello</em></h2>
+  <div class="section-divider-line" style="margin:1rem auto 1.5rem;"></div>
+  <p class="section-intro" style="text-align:center;margin:0 auto 2rem;">Whether it's about climate research, collaborations, or just to connect — I'd love to hear from you.</p>
+  <div class="contact-links">
+    <a href="mailto:olivia.ayim@physics.ox.ac.uk" class="btn btn-rose">✉ Email me</a>
+    <a href="https://www.physics.ox.ac.uk/research/group/atmospheric-oceanic-and-planetary-physics" target="_blank" class="btn btn-outline">AOPP Group ↗</a>
+  </div>
+</div>
+
+<footer>
+  made with love in oxford &nbsp;·&nbsp; <em>✦</em> &nbsp;·&nbsp; vashti ayim &nbsp;·&nbsp; 2026
+</footer>
+
+<script>
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
